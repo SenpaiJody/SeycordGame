@@ -1,52 +1,56 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Tilemaps;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/*
+Basic Player Class.
+ 
+Like all other GameObjects, inputs should not be handled directly but rather hooked onto an InputController's events.
+
+Physics of movement have been abstracted out to the CharacterPhysics component. 
+As a result, the Player class should never need a reference to its own rigidbody.
+
+If it would later make sense to (and it probably will), animations and effects should be abstracted to some component of its own.
+In that case, the Player class would never need a reference to its own SpriteRenderer or Animator.
+However, that is a bridge we'll cross if and when we get there
+
+ */
+[RequireComponent(typeof(CharacterPhysics))]
 public class Player : MonoBehaviour
 {
-    new private Rigidbody2D rigidbody;
+   
+    CharacterPhysics CharacterPhysics;
 
-    private float acceleration = 2f;
-    private float friction = 0.2f;
-    private Vector2 mvmnt;
     private bool isFacingRight = true;
 
     private SpriteRenderer sprite;
     private Animator animator;
 
+
+    public InputAction OnMove;
+
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody2D>();    
-        sprite = GetComponentInChildren<SpriteRenderer>();    
+        CharacterPhysics = GetComponent<CharacterPhysics>();
+        sprite = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
+  
+
+        InputController.instance.OnMove.AddListener(Move);
     }
 
-    public void Move(InputAction.CallbackContext context)
-    {
-        mvmnt = context.ReadValue<Vector2>();
+    public void Move(Vector2 m){
 
-        if (mvmnt.x > 0)
+        CharacterPhysics.mvmnt = m;
+        if (m.x > 0)
             isFacingRight = true;
-        else if (mvmnt.x < 0)
+        else if (m.x < 0)
             isFacingRight = false;
 
-        animator.SetFloat("Movement", mvmnt.magnitude);
-        Debug.Log(animator.GetFloat("Movement"));
+        animator.SetFloat("Movement", m.magnitude);
     }
-    void ApplyFriction()
-    {
-        {
-            rigidbody.velocity -= rigidbody.velocity * friction;
-        }
-    }
-    void ApplyTraction()
-    {
-        rigidbody.velocity += mvmnt * acceleration;
-    }
-
+    
     void FlipToFacingDirection()
     {
         sprite.flipX = !isFacingRight;   
@@ -54,8 +58,6 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        ApplyTraction();
-        ApplyFriction();
         FlipToFacingDirection();
     }
 }

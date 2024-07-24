@@ -252,7 +252,6 @@ GameObject:
   - component: {fileID: 1092258254}
   - component: {fileID: 1092258256}
   - component: {fileID: 1092258255}
-  - component: {fileID: 1092258257}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -309,13 +308,64 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a86329fbaca934548ac31861106fcc8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1092258257
+--- !u!1 &1229912180
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1229912182}
+  - component: {fileID: 1229912181}
+  - component: {fileID: 1229912183}
+  m_Layer: 0
+  m_Name: InputController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1229912181
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1092258253}
+  m_GameObject: {fileID: 1229912180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eef472e3fc7f71643bff787c70e0c0b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnMove:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMoveUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!4 &1229912182
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1229912180}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.59188807, y: 1.0470033, z: 0.07378051}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1229912183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1229912180}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
@@ -335,21 +385,13 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1092258256}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: Move
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: e77fee93-0c34-4b56-9e9f-5cf1f2eead49
     m_ActionName: Default/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b731a4be-4ff0-4ef4-8f11-210626725b39
+    m_ActionName: Default/Interact[/Keyboard/e]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Default
