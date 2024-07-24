@@ -15,6 +15,7 @@ If it would later make sense to (and it probably will), animations and effects s
 In that case, the Player class would never need a reference to its own SpriteRenderer or Animator.
 However, that is a bridge we'll cross if and when we get there
 
+-Jody 24/07/2024
  */
 [RequireComponent(typeof(CharacterPhysics))]
 public class Player : MonoBehaviour

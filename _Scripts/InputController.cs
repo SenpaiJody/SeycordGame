@@ -8,7 +8,8 @@ Purpose is to add a layer of abstraction between the input system and GameObject
 
 No GameObject should have to access input directly from the InputSystem; rather, they should use callbacks defined here instead.
 
-Polling (i.e., checking the value of an input every frame, rather than a callback once the value changes) *should* be possible, have yet to try.
+Polling (i.e., checking the value of an input every frame, rather than a callback once the value changes) *should* be possible, 
+though I have yet to try.
 
 -Jody 24/07/24
  */
