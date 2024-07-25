@@ -17,7 +17,7 @@ public class InputController : MonoBehaviour
 {
     public static InputController instance;
 
-    [SerializeField] protected InputActionAsset playerinput;
+    [SerializeField] protected InputActionAsset ActionsAsset;
 
     private void Awake()
     {
@@ -28,16 +28,22 @@ public class InputController : MonoBehaviour
     }
 
     InputAction Move;
+    InputAction Interact;
     private void Start()
-    {        
-        Move = playerinput.FindActionMap("Default").FindAction("Movement");
+    {
+        ActionsAsset.FindActionMap("Default").Enable(); //Enabling the action, this is to be moved to a more appropriate spot once we have a system for this
+
+        Move = ActionsAsset.FindActionMap("Default").FindAction("Movement");
         Move.performed += (InputAction.CallbackContext ctx) => OnMove.Invoke(ctx.ReadValue<Vector2>()); //.performed is called when the button is pressed
         Move.canceled += (InputAction.CallbackContext ctx) => OnMove.Invoke(ctx.ReadValue<Vector2>()); //.canceled is called when the button is released
+
+        Interact = ActionsAsset.FindActionMap("Default").FindAction("Interact");
+        Interact.performed += (InputAction.CallbackContext ctx) => OnInteract.Invoke(); //.performed is called when the button is pressed
     }
 
     //events for GameObjects to hook onto 
     public UnityEvent<Vector2> OnMove = new();
-
+    public UnityEvent OnInteract = new();
 
 
 

@@ -21,12 +21,15 @@ However, that is a bridge we'll cross if and when we get there
 public class Player : MonoBehaviour
 {
    
-    CharacterPhysics CharacterPhysics;
+    private CharacterPhysics CharacterPhysics;
+    private PlayerInteractor interactor;
+
 
     private bool isFacingRight = true;
 
     private SpriteRenderer sprite;
     private Animator animator;
+    
 
 
     public InputAction OnMove;
@@ -36,9 +39,16 @@ public class Player : MonoBehaviour
         CharacterPhysics = GetComponent<CharacterPhysics>();
         sprite = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
-  
+        interactor = GetComponentInChildren<PlayerInteractor>();
 
         InputController.instance.OnMove.AddListener(Move);
+        InputController.instance.OnInteract.AddListener(Interact);
+    }
+
+
+    public void Interact()
+    {
+        interactor.Interact();
     }
 
     public void Move(Vector2 m){
