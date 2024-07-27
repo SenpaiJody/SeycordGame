@@ -13,3 +13,10 @@ MonoBehaviour:
   m_Name: SeyChan
   m_EditorClassIdentifier: Assembly-CSharp::DialogueCharacter
   name: SeyChan
+  sprites:
+  - name: seychan_default
+    sprite: {fileID: 21300000, guid: f1deaf5b3b3808149a5aacb5ae551d6c, type: 3}
+  - name: seychan_displeased
+    sprite: {fileID: 21300000, guid: 18a38047f8abfcd4c8f85bda0c0ba66c, type: 3}
+  - name: seychan_stars
+    sprite: {fileID: 21300000, guid: b66ff00182301984f8794c6a461368f6, type: 3}

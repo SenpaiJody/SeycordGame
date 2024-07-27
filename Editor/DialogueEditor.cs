@@ -5,6 +5,8 @@ using UnityEditor;
 using UnityEngine.Events;
 using Unity.VisualScripting;
 using UnityEditor.Search;
+using UnityEngine.UI;
+using Microsoft.SqlServer.Server;
 
 public class DialogueEditor : EditorWindow
 {
@@ -20,9 +22,11 @@ public class DialogueEditor : EditorWindow
 
     bool dialogueFoldout = false;
     bool pageFoldout = false;
-    bool characterFoldout = false;
+    bool characterFoldout = true;
 
     string nextButtonText = "Next";
+
+    Vector2 scrollPosition;
 
     [MenuItem("Window/DialogueEditor")]
     public static void ShowWindow()
@@ -32,7 +36,7 @@ public class DialogueEditor : EditorWindow
 
     private void OnGUI()
     {
-        
+        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
         currentAsset = EditorGUILayout.ObjectField("Dialogue to Load", currentAsset, typeof(Dialogue), false) as Dialogue;
         if (GUILayout.Button("Load"))
         {
@@ -43,6 +47,12 @@ public class DialogueEditor : EditorWindow
             }
             
         }
+        if (currentAsset == null)
+        {
+            EditorGUILayout.EndScrollView();
+            return;
+        }
+    
         GUILayout.Space(10) ;
 
         dialogueFoldout = EditorGUILayout.Foldout(dialogueFoldout, "Dialogue Events", true);
@@ -103,8 +113,11 @@ public class DialogueEditor : EditorWindow
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("Delete", GUILayout.ExpandWidth(false)))
         {
-            DeletePage(pageNum);
-            LoadPage(pageNum < currentAsset.pages.Count - 1 ? pageNum+1 : pageNum-1);
+            if (EditorUtility.DisplayDialog("Delete Page", "Would you like to delete this page of Dialogue?", "Yes", "No"))
+            {
+                DeletePage(pageNum);
+                LoadPage(pageNum < currentAsset.pages.Count - 1 ? pageNum + 1 : pageNum - 1);
+            }          
             GUI.FocusControl(null);
         };
         GUILayout.EndHorizontal();
@@ -116,10 +129,101 @@ public class DialogueEditor : EditorWindow
 
         GUILayout.Space(10);
 
-        characterFoldout = EditorGUILayout.Foldout(characterFoldout, "Characters", true);
+        characterFoldout = EditorGUILayout.Foldout(characterFoldout, "Participants", true);
         if (characterFoldout)
         {
-            //TODO: begin rendering character stuff
+            GUILayout.BeginVertical();
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            EditorGUIUtility.fieldWidth = 120;
+            for (int i = 0; i< currentPage.characters.Count; i++)  //each card
+            {
+                string participantName = "";
+
+                DialogueCharacterContext ctx = currentPage.characters[i];
+                //card heading
+                GUILayout.BeginVertical("textarea");
+                GUILayout.Label(string.Format("Participant {0} ({1})", (i+1), (ctx.character != null ? ctx.character.name : "Not Selected")) ,EditorStyles.boldLabel );
+                
+                //character asset
+                ctx.character = EditorGUILayout.ObjectField("Character Asset", ctx.character, typeof(DialogueCharacter), false) as DialogueCharacter;
+
+                if (ctx.character != null) {
+                    int spriteIndex = ctx.character.GetSpriteIndex(ctx.currentSpriteName);
+                    spriteIndex = EditorGUILayout.Popup("Sprite", spriteIndex, ctx.character.GetSpriteNames());
+                    ctx.currentSpriteName = ctx.character.GetSpriteNameAt(spriteIndex);
+
+                    Texture2D preview = ctx.character.GetSpriteAt(spriteIndex).texture;
+                    participantName = ctx.character.name;
+                }
+                
+                //position slider
+                ctx.position = EditorGUILayout.Slider("Position",ctx.position, 0, 1);
+
+                //isActive Toggle
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Is Active?");
+                GUIStyle isActiveButton = new GUIStyle("button");
+                isActiveButton.normal.textColor = ctx.isActive ? Color.green : Color.red;
+                isActiveButton.hover.textColor = ctx.isActive ? Color.green : Color.red;
+                if (GUILayout.Button(ctx.isActive.ToString(), isActiveButton))
+                {
+                    ctx.isActive = !ctx.isActive;
+                }
+                GUILayout.EndHorizontal();
+
+                //FacingDirection Toggle
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Facing Direction");
+                if (GUILayout.Button(ctx.isFlipped ? "<< Left " : "Right >>"))
+                {
+                    ctx.isFlipped = !ctx.isFlipped;
+                }
+                GUILayout.EndHorizontal();
+
+
+                //Move/Delete Group
+                GUILayout.BeginHorizontal();
+                EditorGUI.BeginDisabledGroup(i == 0);
+                if (GUILayout.Button("<<"))
+                {
+                    currentPage.characters.Insert(i - 1, currentPage.characters[i]);
+                    currentPage.characters.RemoveAt(i + 1);
+                }
+                EditorGUI.EndDisabledGroup();
+                if (GUILayout.Button("Remove"))
+                {
+                    if (EditorUtility.DisplayDialog("Remove Participant", "Would you like to remove this Participant from this Page?", "Yes", "No"))
+                    {
+                        currentPage.characters.RemoveAt(i);
+                        i--;
+                    }
+                }
+                EditorGUI.BeginDisabledGroup(i == currentPage.characters.Count - 1);
+                if (GUILayout.Button(">>"))
+                {
+                    currentPage.characters.Insert(i + 2, currentPage.characters[i]);
+                    currentPage.characters.RemoveAt(i);
+                }
+                EditorGUI.EndDisabledGroup();
+                GUILayout.EndHorizontal();
+
+
+                GUILayout.EndVertical();
+
+            }
+            EditorGUIUtility.fieldWidth = 0;
+
+
+            if (GUILayout.Button("Add", GUILayout.ExpandWidth(false)))
+            {
+                currentPage.characters.Add(new DialogueCharacterContext());
+            }
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+            
+            
         }
 
 
@@ -135,6 +239,8 @@ public class DialogueEditor : EditorWindow
             s.ApplyModifiedProperties();
             GUILayout.EndHorizontal();
         }
+
+        EditorGUILayout.EndScrollView();
     }
 
 
@@ -162,7 +268,6 @@ public class DialogueEditor : EditorWindow
     void AddPage()
     {
         currentAsset.pages.Add(new DialoguePage());
-        Debug.Log("added");
         LoadPage(currentAsset.pages.Count-1);
     }
 

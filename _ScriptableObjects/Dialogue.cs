@@ -30,7 +30,7 @@ A DialogueCharacterContext is a small object that contains information about a D
 Each DialogueCharacterContext consists of:
     > A DialogueCharacter
     > A string denoting the DialogueCharacter's current sprite
-    > A DialogueCharacter's current position
+    > A DialogueCharacter's current position as a percentage (0 = all the way to the left, 1.0 = all the way to the right)
     > A boolean denoting whether or not the DialogueCharacter is horizontally flipped
     > A boolean denoting whether or not the DialogueCharacter is currently active (fully colored) or inactive (greyed out)
 
@@ -81,9 +81,9 @@ public class DialoguePage
 [Serializable]
 public class DialogueCharacterContext
 {
-    public DialogueCharacter Character;
-    public string sprite;
-    public Vector2 position;
+    public DialogueCharacter character;
+    public string currentSpriteName;
+    public float position;
     public bool isFlipped;
     public bool isActive;
 }

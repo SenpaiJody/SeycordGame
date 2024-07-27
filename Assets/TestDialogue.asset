@@ -28,8 +28,13 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     FontSize: 16
-  - content: 
-    characters: []
+  - content: wa
+    characters:
+    - character: {fileID: 11400000, guid: 5d590c836fa2802478391dceebad0a8f, type: 2}
+      currentSpriteName: meelaffs_seychan_default
+      position: 0
+      isFlipped: 0
+      isActive: 0
     OnPageStart:
       m_PersistentCalls:
         m_Calls: []
